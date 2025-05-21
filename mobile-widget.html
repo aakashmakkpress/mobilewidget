@@ -44,6 +44,24 @@
                     </button>
                 </li>
                 <li class="mb-2">
+                    <button id="nav-bookmarks" class="flex items-center w-full p-3 rounded-lg transition-all duration-200 hover:bg-gray-700 text-gray-300 hover:text-white">
+                        <svg class="lucide lucide-bookmark mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                        <span>Bookmarks</span>
+                    </button>
+                </li>
+                <li class="mb-2">
+                    <button id="nav-userActivity" class="flex items-center w-full p-3 rounded-lg transition-all duration-200 hover:bg-gray-700 text-gray-300 hover:text-white">
+                        <svg class="lucide lucide-activity mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        <span>User Activity</span>
+                    </button>
+                </li>
+                <li class="mb-2">
+                    <button id="nav-billing" class="flex items-center w-full p-3 rounded-lg transition-all duration-200 hover:bg-gray-700 text-gray-300 hover:text-white">
+                        <svg class="lucide lucide-credit-card mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                        <span>Billing</span>
+                    </button>
+                </li>
+                <li class="mb-2">
                     <button id="nav-support" class="flex items-center w-full p-3 rounded-lg transition-all duration-200 hover:bg-gray-700 text-gray-300 hover:text-white">
                         <svg class="lucide lucide-life-buoy mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M10 16.5 16.5 10"/><path d="M12 12 4 4"/><path d="m12 12 8 8"/><path d="m12 12-8 8"/></svg>
                         <span>Support</span>
@@ -93,8 +111,7 @@
             <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-indigo-500"></div>
             <p class="ml-4 text-xl text-gray-700">Initializing App...</p>
         </div>
-
-        </div>
+    </div>
 
     <div id="widget-customization-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-40 p-4 hidden">
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl p-8 overflow-y-auto max-h-[90vh] relative">
@@ -176,6 +193,18 @@
         </div>
     </div>
 
+    <div id="all-widgets-preview-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-40 p-4 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl p-8 overflow-y-auto max-h-[90vh] relative">
+            <button id="all-widgets-preview-close-button" class="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors duration-200" title="Close">
+                <svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b pb-4">All Active Widgets Preview</h2>
+            <div id="all-widgets-preview-content" class="flex flex-wrap items-center justify-center p-6 bg-gray-100 rounded-lg border border-gray-300 min-h-[100px] gap-4">
+                </div>
+            <p class="text-sm text-gray-500 mt-4 text-center">This simulates how your active widgets might appear on your website.</p>
+        </div>
+    </div>
+
     <div id="notification-container"></div>
 
     <script type="module">
@@ -192,6 +221,9 @@
             loadingApp: true,
             loadingWidgets: true,
             isAppEnabled: true, // New state for app toggle
+            isLoggingEnabled: false, // State for user activity logging
+            userActivityLogs: [], // Mock data for user activity
+            bookmarks: [], // Mock data for bookmarks
             plan: {
                 name: 'Free Trial',
                 daysLeft: 30,
@@ -208,7 +240,7 @@
                 { id: 'share-icons', type: 'Share Icons', name: 'Share Icons', description: 'Allow visitors to share your page.', icon: 'Share', config: { sharePlatforms: [] } },
             ],
             iconOptions: [
-                'MessageCircle', 'ShoppingCart', 'MapPin', 'Megaphone', 'Phone', 'Heart', 'Share2', 'Share', 'Settings', 'Globe', 'Link', 'Mail', 'Facebook', 'Instagram', 'Twitter', 'Linkedin', 'Youtube', 'HelpCircle', 'BookOpen', 'LifeBuoy', 'Power'
+                'MessageCircle', 'ShoppingCart', 'MapPin', 'Megaphone', 'Phone', 'Heart', 'Share2', 'Share', 'Settings', 'Globe', 'Link', 'Mail', 'Facebook', 'Instagram', 'Twitter', 'Linkedin', 'Youtube', 'HelpCircle', 'BookOpen', 'LifeBuoy', 'Power', 'Activity', 'Bookmark', 'CreditCard'
             ]
         };
 
@@ -228,6 +260,9 @@
         const toggleAppText = document.getElementById('toggle-app-text');
         const planNameDisplay = document.getElementById('current-plan-name');
         const planDaysLeftDisplay = document.getElementById('current-plan-days-left');
+        const allWidgetsPreviewModalEl = document.getElementById('all-widgets-preview-modal');
+        const allWidgetsPreviewCloseButton = document.getElementById('all-widgets-preview-close-button');
+        const allWidgetsPreviewContent = document.getElementById('all-widgets-preview-content');
 
 
         // --- Utility Functions ---
@@ -273,6 +308,9 @@
                 HelpCircle: '<svg class="lucide lucide-help-circle" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
                 BookOpen: '<svg class="lucide lucide-book-open" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
                 Power: '<svg class="lucide lucide-power" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.36 6.64A9 9 0 1 1 5.64 17.36L12 12"/></svg>',
+                Activity: '<svg class="lucide lucide-activity" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>',
+                Bookmark: '<svg class="lucide lucide-bookmark" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>',
+                CreditCard: '<svg class="lucide lucide-credit-card" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>',
             };
             const svgContent = iconMap[iconName] || iconMap['Globe']; // Default to Globe
             return svgContent.replace(/SIZE/g, size).replace(/CLASS_NAME/g, className);
@@ -333,6 +371,10 @@
         const LOCAL_STORAGE_WIDGETS_KEY = 'mobile_widgets_dashboard_widgets';
         const LOCAL_STORAGE_APP_ENABLED_KEY = 'mobile_widgets_dashboard_isAppEnabled';
         const LOCAL_STORAGE_PLAN_KEY = 'mobile_widgets_dashboard_plan';
+        const LOCAL_STORAGE_LOGGING_ENABLED_KEY = 'mobile_widgets_dashboard_isLoggingEnabled';
+        const LOCAL_STORAGE_USER_ACTIVITY_LOGS_KEY = 'mobile_widgets_dashboard_userActivityLogs';
+        const LOCAL_STORAGE_BOOKMARKS_KEY = 'mobile_widgets_dashboard_bookmarks';
+
 
         function loadStateFromLocalStorage() {
             const storedWidgets = localStorage.getItem(LOCAL_STORAGE_WIDGETS_KEY);
@@ -350,6 +392,35 @@
             const storedAppEnabled = localStorage.getItem(LOCAL_STORAGE_APP_ENABLED_KEY);
             if (storedAppEnabled !== null) {
                 appState.isAppEnabled = JSON.parse(storedAppEnabled);
+            }
+
+            const storedLoggingEnabled = localStorage.getItem(LOCAL_STORAGE_LOGGING_ENABLED_KEY);
+            if (storedLoggingEnabled !== null) {
+                appState.isLoggingEnabled = JSON.parse(storedLoggingEnabled);
+            }
+
+            const storedUserActivityLogs = localStorage.getItem(LOCAL_STORAGE_USER_ACTIVITY_LOGS_KEY);
+            if (storedUserActivityLogs) {
+                try {
+                    appState.userActivityLogs = JSON.parse(storedUserActivityLogs);
+                } catch (e) {
+                    console.error("Error parsing stored user activity logs:", e);
+                    appState.userActivityLogs = [];
+                }
+            } else {
+                appState.userActivityLogs = [];
+            }
+
+            const storedBookmarks = localStorage.getItem(LOCAL_STORAGE_BOOKMARKS_KEY);
+            if (storedBookmarks) {
+                try {
+                    appState.bookmarks = JSON.parse(storedBookmarks);
+                } catch (e) {
+                    console.error("Error parsing stored bookmarks:", e);
+                    appState.bookmarks = [];
+                }
+            } else {
+                appState.bookmarks = [];
             }
 
             // Load plan state
@@ -373,12 +444,69 @@
             localStorage.setItem(LOCAL_STORAGE_WIDGETS_KEY, JSON.stringify(appState.userWidgets));
             localStorage.setItem(LOCAL_STORAGE_APP_ENABLED_KEY, JSON.stringify(appState.isAppEnabled));
             localStorage.setItem(LOCAL_STORAGE_PLAN_KEY, JSON.stringify(appState.plan));
+            localStorage.setItem(LOCAL_STORAGE_LOGGING_ENABLED_KEY, JSON.stringify(appState.isLoggingEnabled));
+            localStorage.setItem(LOCAL_STORAGE_USER_ACTIVITY_LOGS_KEY, JSON.stringify(appState.userActivityLogs));
+            localStorage.setItem(LOCAL_STORAGE_BOOKMARKS_KEY, JSON.stringify(appState.bookmarks));
             console.log("Saved state to local storage:", appState);
         }
+
+        // --- Mock Data Generation ---
+        function generateMockUserActivity() {
+            const activities = [];
+            const pages = ['Homepage', 'Product Page', 'Cart', 'Checkout', 'Contact Us', 'About Us'];
+            const events = ['Page View', 'Widget Click', 'Form Submission', 'Add to Cart', 'Purchase'];
+            const eventTypes = ['Impression', 'Interaction', 'Conversion'];
+            const countries = ['USA', 'Canada', 'UK', 'Germany', 'Australia', 'India'];
+
+            for (let i = 1; i <= 15; i++) {
+                const timestamp = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toLocaleString();
+                activities.push({
+                    sno: i,
+                    ipAddress: `192.168.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+                    country: countries[Math.floor(Math.random() * countries.length)],
+                    event: events[Math.floor(Math.random() * events.length)],
+                    page: pages[Math.floor(Math.random() * pages.length)],
+                    timestamp: timestamp,
+                    eventType: eventTypes[Math.floor(Math.random() * eventTypes.length)]
+                });
+            }
+            appState.userActivityLogs = activities;
+            saveStateToLocalStorage();
+        }
+
+        function generateMockBookmarks() {
+            const bookmarks = [];
+            const pages = ['/pricing', '/features', '/integrations', '/blog/post-1', '/support/faq'];
+            const countries = ['USA', 'Canada', 'UK', 'Germany', 'Australia', 'India'];
+
+            for (let i = 1; i <= 10; i++) {
+                const createdAt = new Date(Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000).toLocaleString();
+                const updatedAt = new Date(Date.parse(createdAt) + Math.random() * 7 * 24 * 60 * 60 * 1000).toLocaleString();
+                bookmarks.push({
+                    sno: i,
+                    page: pages[Math.floor(Math.random() * pages.length)],
+                    ipAddress: `10.0.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+                    country: countries[Math.floor(Math.random() * countries.length)],
+                    createdAt: createdAt,
+                    updatedAt: updatedAt
+                });
+            }
+            appState.bookmarks = bookmarks;
+            saveStateToLocalStorage();
+        }
+
 
         // --- App Initialization ---
         window.onload = async () => {
             loadStateFromLocalStorage();
+            // Generate mock data if not already present
+            if (appState.userActivityLogs.length === 0) {
+                generateMockUserActivity();
+            }
+            if (appState.bookmarks.length === 0) {
+                generateMockBookmarks();
+            }
+
             loadingSpinnerEl.classList.add('hidden'); // Hide loading spinner
             renderApp(); // Initial render after state is loaded
         };
@@ -436,6 +564,15 @@
                     case 'availableWidgets':
                         renderAvailableWidgetsList();
                         break;
+                    case 'bookmarks':
+                        renderBookmarks();
+                        break;
+                    case 'userActivity':
+                        renderUserActivity();
+                        break;
+                    case 'billing':
+                        renderBilling();
+                        break;
                     case 'settings':
                         renderSettings();
                         break;
@@ -471,13 +608,6 @@
 
             // Filter for active widgets for the live preview
             const activeWidgets = appState.userWidgets.filter(widget => widget.isActive);
-            const previewIconsHtml = activeWidgets.length > 0
-                ? activeWidgets.slice(0, 5).map(widget => `
-                    <div class="p-2 bg-indigo-100 rounded-full flex-shrink-0 shadow-sm" title="${widget.name}">
-                        ${renderLucideIcon(widget.icon, 28, 'text-indigo-600', widget.customIconDataUrl)}
-                    </div>
-                `).join('')
-                : `<p class="text-gray-500 text-center">No active widgets yet. Add some from "Available Widgets"!</p>`;
 
             dashboardContent.innerHTML = `
                 <h1 class="text-4xl font-extrabold text-gray-900 mb-8">Welcome to Your Dashboard!</h1>
@@ -485,7 +615,7 @@
                     Manage and customize your mobile widgets with ease.
                 </p>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
                         <div class="flex items-center justify-between mb-4">
                             <h2 class="text-xl font-semibold text-gray-800">Active Widgets</h2>
@@ -595,7 +725,13 @@
             const myWidgetsContent = document.createElement('div');
             myWidgetsContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
             myWidgetsContent.innerHTML = `
-                <h1 class="text-3xl font-bold text-gray-900 mb-8">My Widgets</h1>
+                <div class="flex items-center justify-between mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">My Widgets</h1>
+                    <button id="show-preview-btn" class="px-5 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-200 flex items-center">
+                        <svg class="lucide lucide-eye mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Show Preview
+                    </button>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     ${widgetsHtml}
                 </div>
@@ -623,6 +759,8 @@
                     handleDeleteWidget(widgetId);
                 };
             });
+
+            document.getElementById('show-preview-btn').onclick = showAllWidgetsPreview;
         }
 
         function renderAvailableWidgetsList() {
@@ -668,36 +806,192 @@
             });
         }
 
+        function renderBookmarks() {
+            const bookmarksContent = document.createElement('div');
+            bookmarksContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+
+            let tableRowsHtml = '';
+            if (appState.bookmarks.length === 0) {
+                tableRowsHtml = `<tr><td colspan="6" class="py-4 text-center text-gray-500">No bookmarks found.</td></tr>`;
+            } else {
+                tableRowsHtml = appState.bookmarks.map(bookmark => `
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-3 px-4 text-sm text-gray-700">${bookmark.sno}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700 break-all">${bookmark.page}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${bookmark.ipAddress}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${bookmark.country}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${bookmark.createdAt}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${bookmark.updatedAt}</td>
+                    </tr>
+                `).join('');
+            }
+
+            bookmarksContent.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Bookmarks</h1>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no.</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Page</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated At</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            ${tableRowsHtml}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            mainContentEl.appendChild(bookmarksContent);
+        }
+
+        function renderUserActivity() {
+            const userActivityContent = document.createElement('div');
+            userActivityContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+
+            const toggleLoggingClasses = appState.isLoggingEnabled
+                ? 'bg-green-600 hover:bg-green-700'
+                : 'bg-red-600 hover:bg-red-700';
+            const toggleLoggingText = appState.isLoggingEnabled ? 'Disable Logging' : 'Enable Logging';
+            const toggleLoggingIcon = appState.isLoggingEnabled ? renderLucideIcon('ToggleRight', 20) : renderLucideIcon('ToggleLeft', 20);
+
+            let tableRowsHtml = '';
+            if (!appState.isLoggingEnabled) {
+                tableRowsHtml = `<tr><td colspan="7" class="py-4 text-center text-gray-500">User activity logging is currently disabled. Enable it to see logs.</td></tr>`;
+            } else if (appState.userActivityLogs.length === 0) {
+                tableRowsHtml = `<tr><td colspan="7" class="py-4 text-center text-gray-500">No activity logged yet.</td></tr>`;
+            } else {
+                tableRowsHtml = appState.userActivityLogs.map(log => `
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-3 px-4 text-sm text-gray-700">${log.sno}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${log.ipAddress}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${log.country}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${log.event}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700 break-all">${log.page}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${log.timestamp}</td>
+                        <td class="py-3 px-4 text-sm text-gray-700">${log.eventType}</td>
+                    </tr>
+                `).join('');
+            }
+
+            userActivityContent.innerHTML = `
+                <div class="flex items-center justify-between mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">User Activity</h1>
+                    <button id="toggle-logging-btn" class="px-5 py-2 text-white rounded-lg shadow-md transition-colors duration-200 flex items-center ${toggleLoggingClasses}">
+                        ${toggleLoggingIcon} <span class="ml-2">${toggleLoggingText}</span>
+                    </button>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">S.no.</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP Address</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Page</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event Type</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            ${tableRowsHtml}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            mainContentEl.appendChild(userActivityContent);
+
+            document.getElementById('toggle-logging-btn').onclick = () => {
+                appState.isLoggingEnabled = !appState.isLoggingEnabled;
+                saveStateToLocalStorage();
+                showNotification(`User activity logging is now ${appState.isLoggingEnabled ? 'enabled' : 'disabled'}.`, 'success');
+                renderApp(); // Re-render to reflect the change
+            };
+        }
+
+        function renderBilling() {
+            const billingContent = document.createElement('div');
+            billingContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+
+            billingContent.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Billing & Subscription</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Current Plan</h2>
+                        <p class="text-gray-700 mb-2">
+                            Plan Name: <span class="font-bold text-indigo-600">${appState.plan.name}</span>
+                        </p>
+                        <p class="text-gray-700 mb-4">
+                            Days Remaining: <span class="font-bold text-indigo-600">${appState.plan.daysLeft} days</span>
+                        </p>
+                        <p class="text-sm text-gray-500">
+                            ${appState.plan.canUnlockPremiumWidgets ? 'You have access to all premium features.' : 'Upgrade to unlock premium features.'}
+                        </p>
+                        <button id="manage-subscription-btn" class="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-colors duration-200">
+                            Manage Subscription
+                        </button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Available Plans</h2>
+                        <ul class="space-y-4">
+                            <li>
+                                <h3 class="font-semibold text-lg text-gray-800">Free Trial</h3>
+                                <p class="text-gray-600">Basic widgets, limited features. (${appState.plan.name === 'Free Trial' ? 'Current' : 'Available'})</p>
+                            </li>
+                            <li>
+                                <h3 class="font-semibold text-lg text-gray-800">Premium Plan</h3>
+                                <p class="text-gray-600">Access to all widgets and advanced features. ($9.99/month)</p>
+                                ${!appState.plan.canUnlockPremiumWidgets ? `
+                                <button id="upgrade-plan-button-billing" class="mt-2 px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200">
+                                    Upgrade Now
+                                </button>
+                                ` : '<p class="text-green-600 text-sm mt-2">You are already on a premium plan!</p>'}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            mainContentEl.appendChild(billingContent);
+
+            document.getElementById('manage-subscription-btn').onclick = () => {
+                showNotification('Managing subscription details (demo function).', 'success');
+            };
+            const upgradeButton = document.getElementById('upgrade-plan-button-billing');
+            if (upgradeButton) {
+                upgradeButton.onclick = () => {
+                    appState.plan.name = 'Premium Plan';
+                    appState.plan.daysLeft = 365;
+                    appState.plan.canUnlockPremiumWidgets = true;
+                    saveStateToLocalStorage();
+                    showNotification('Plan upgraded! Premium widgets unlocked.', 'success');
+                    renderApp(); // Re-render to reflect changes
+                };
+            }
+        }
+
         function renderSettings() {
             const settingsContent = document.createElement('div');
             settingsContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
             settingsContent.innerHTML = `
                 <h1 class="text-3xl font-bold text-gray-900 mb-8">Settings</h1>
-                <p class="text-gray-700">Account settings and billing information would go here.</p>
+                <p class="text-gray-700">Account settings and general application configurations.</p>
                 <div class="mt-8 p-6 bg-white rounded-xl shadow-md border border-gray-200">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Manage Plan</h2>
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Account Information</h2>
                     <p class="text-gray-700 mb-4">
-                        Your current plan is: <span class="font-bold text-indigo-600">${appState.plan.name}</span>.
-                        You have <span class="font-bold text-indigo-600">${appState.plan.daysLeft} days left</span>.
+                        User ID: <span class="font-bold text-gray-600">DEMO_USER_123</span>
                     </p>
-                    <button id="upgrade-plan-button" class="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200">
-                        Upgrade Plan
-                    </button>
-                    <p class="text-sm text-gray-500 mt-2">
-                        (This is a demo. Clicking "Upgrade Plan" will unlock premium widgets.)
+                    <p class="text-sm text-gray-500">
+                        (This is a demo ID. In a real application, this would be your unique user identifier.)
                     </p>
                 </div>
             `;
             mainContentEl.appendChild(settingsContent);
-
-            document.getElementById('upgrade-plan-button').onclick = () => {
-                appState.plan.name = 'Premium Plan';
-                appState.plan.daysLeft = 365;
-                appState.plan.canUnlockPremiumWidgets = true;
-                saveStateToLocalStorage();
-                showNotification('Plan upgraded! Premium widgets unlocked.', 'success');
-                renderApp(); // Re-render to reflect changes
-            };
         }
 
         function renderFAQs() {
@@ -721,6 +1015,14 @@
                     <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-800 mb-2">My app is disabled, how do I enable it?</h3>
                         <p class="text-gray-700">If the app is disabled, the "Disable App Completely" button in the header will change to "Enable App". Click it to reactivate all your widgets.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">How do I view user activity?</h3>
+                        <p class="text-gray-700">Go to the "User Activity" page from the sidebar. Ensure logging is enabled via the toggle button on that page to see simulated user interactions.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Where can I see my billing details?</h3>
+                        <p class="text-gray-700">Visit the "Billing" page in the sidebar to review your current plan and subscription information.</p>
                     </div>
                 </div>
             `;
@@ -1225,6 +1527,36 @@
                 showNotification('Widget not found.', 'error');
             }
         }
+
+        // --- All Widgets Preview Modal Functions ---
+        function showAllWidgetsPreview() {
+            allWidgetsPreviewModalEl.classList.remove('hidden');
+            const activeWidgets = appState.userWidgets.filter(widget => widget.isActive);
+            let previewHtml = '';
+
+            if (activeWidgets.length === 0) {
+                previewHtml = `<p class="text-gray-500 text-center w-full">No active widgets to preview. Activate some in "My Widgets"!</p>`;
+            } else {
+                previewHtml = activeWidgets.map(widget => `
+                    <div class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 min-w-[120px] max-w-[150px] text-center relative group">
+                        <div class="p-3 bg-indigo-100 rounded-full mb-2">
+                            ${renderLucideIcon(widget.icon, 32, 'text-indigo-600', widget.customIconDataUrl)}
+                        </div>
+                        <p class="font-semibold text-gray-800 text-sm truncate w-full">${widget.name}</p>
+                        <p class="text-xs text-gray-500">${widget.type}</p>
+                        <div class="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs px-3 py-1 rounded-md whitespace-nowrap">
+                            ${widget.hoverMessage || 'No hover message'}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            allWidgetsPreviewContent.innerHTML = previewHtml;
+        }
+
+        allWidgetsPreviewCloseButton.onclick = () => {
+            allWidgetsPreviewModalEl.classList.add('hidden');
+        };
+
     </script>
 </body>
 </html>
