@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Widgets Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Prevent body scroll when modal is open */
+        }
+        /* Custom styles for Lucide icons to ensure they are rendered */
+        .lucide {
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="flex h-screen font-inter">
+    <div id="sidebar" class="w-64 bg-gray-800 text-white h-screen p-6 flex flex-col rounded-r-lg shadow-lg">
+        <div class="text-2xl font-bold mb-8 text-indigo-400">Mobile Widgets</div>
+        <nav class="flex-grow">
+            <ul>
+                <li class="mb-2">
+                    <button id="nav-dashboard" class="flex items-center w-full p-3 rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow-md">
+                        <svg class="lucide lucide-home mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <span>Dashboard</span>
+                    </button>
+                </li>
+                <li class="mb-2">
+                    <button id="nav-myWidgets" class="flex items-center w-full p-3 rounded-lg transition-all duration-200 hover:bg-gray-700 text-gray-300 hover:text-white">
+                        <svg class="lucide lucide-share-2 mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>
+                        <span>My Widgets</span>
+                    </button>
+                </li>
+                <li class="mb-2">
+                    <button id="nav-availableWidgets" class="flex items-center w-full p-3 rounded-lg transition-all duration-200 hover:bg-gray-700 text-gray-300 hover:text-white">
+                        <svg class="lucide lucide-plus mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                        <span>Available Widgets</span>
+                    </button>
+                </li>
+                <li class="mb-2">
+                    <button id="nav-support" class="flex items-center w-full p-3 rounded-lg transition-all duration-200 hover:bg-gray-700 text-gray-300 hover:text-white">
+                        <svg class="lucide lucide-life-buoy mr-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M10 16.5 16.5 10"/><path d="M12 12 4 4"/><path d="m12 12 8 8"/><path d="m12 12-8 8"/></svg>
+                        <span>Support</span>
+                        <svg id="support-toggle-icon" class="lucide lucide-chevron-right ml-auto" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                    <ul id="support-submenu" class="ml-6 mt-1 hidden">
+                        <li class="mb-1">
+                            <button id="nav-faqs" class="flex items-center w-full p-2 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                                <svg class="lucide lucide-help-circle mr-3" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+                                <span>FAQ's</span>
+                            </button>
+                        </li>
+                        <li class="mb-1">
+                            <button id="nav-setupGuide" class="flex items-center w-full p-2 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                                <svg class="lucide lucide-book-open mr-3" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                                <span>Set up Guide</span>
+                            </button>
+                        </li>
+                        <li class="mb-1">
+                            <button id="nav-contactUs" class="flex items-center w-full p-2 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                                <svg class="lucide lucide-mail mr-3" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-10 7L2 7"/></svg>
+                                <span>Contact Us</span>
+                            </button>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div class="mt-auto pt-4 border-t border-gray-700">
+            <div id="plan-display" class="text-sm text-gray-400 p-2 break-words">
+                Plan: <span class="font-semibold text-indigo-300" id="current-plan-name">Free Trial</span><br>
+                Days Left: <span class="font-semibold text-indigo-300" id="current-plan-days-left">30 days left</span>
+            </div>
+            </div>
+    </div>
+
+    <div id="main-content" class="flex-1 overflow-y-auto">
+        <div id="app-header" class="w-full bg-white p-4 shadow-md flex items-center justify-between sticky top-0 z-10 rounded-b-lg">
+            <h1 class="text-2xl font-semibold text-gray-800">Mobile Widgets Dashboard</h1>
+            <button id="toggle-app-button" class="px-4 py-2 rounded-lg transition-colors duration-200 shadow-sm flex items-center">
+                <svg class="lucide lucide-power mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.36 6.64A9 9 0 1 1 5.64 17.36L12 12"/></svg>
+                <span id="toggle-app-text"></span>
+            </button>
+        </div>
+
+        <div class="flex items-center justify-center min-h-screen bg-gray-100" id="loading-spinner">
+            <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-indigo-500"></div>
+            <p class="ml-4 text-xl text-gray-700">Initializing App...</p>
+        </div>
+
+        </div>
+
+    <div id="widget-customization-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-40 p-4 hidden">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-3xl p-8 overflow-y-auto max-h-[90vh] relative">
+            <button id="modal-close-button" class="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors duration-200" title="Close">
+                <svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+
+            <h2 id="modal-title" class="text-3xl font-bold text-gray-900 mb-6 border-b pb-4">Customize Widget</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="widget-name">
+                            Widget Name
+                        </label>
+                        <input type="text" id="widget-name" name="name" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Chat with Us">
+                        <p class="text-xs text-gray-500 mt-1">This name is for your reference in the dashboard.</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="hover-message">
+                            Message on Hover
+                        </label>
+                        <input type="text" id="hover-message" name="hoverMessage" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="e.g., Click to chat on WhatsApp">
+                        <p class="text-xs text-gray-500 mt-1">This message appears when users hover over the widget.</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="widget-icon">
+                            Widget Icon
+                        </label>
+                        <div class="flex items-center space-x-3 mb-2">
+                            <div id="widget-icon-preview" class="p-2 bg-indigo-100 rounded-full flex-shrink-0">
+                                </div>
+                            <select id="widget-icon" name="icon" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </select>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Select an icon from the library or upload your own.</p>
+
+                        <div class="mt-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="custom-icon-upload">
+                                Upload Custom Icon (PNG, JPG, SVG)
+                            </label>
+                            <input type="file" id="custom-icon-upload" name="customIconUpload" accept="image/png, image/jpeg, image/svg+xml" class="block w-full text-sm text-gray-500
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-full file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-indigo-50 file:text-indigo-700
+                                hover:file:bg-indigo-100 cursor-pointer
+                            ">
+                            <p class="text-xs text-gray-500 mt-1">Max file size: 1MB (for local storage demo purposes).</p>
+                        </div>
+                    </div>
+
+                    <div id="specific-fields-container">
+                        </div>
+                </div>
+
+                <div class="bg-gray-100 p-6 rounded-xl border border-gray-200 flex flex-col items-center justify-center">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Live Preview</h3>
+                    <div class="w-40 h-40 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-indigo-300 relative group">
+                        <div id="live-preview-icon"></div>
+                        <div id="live-preview-hover-message" class="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs px-3 py-1 rounded-md whitespace-nowrap"></div>
+                    </div>
+                    <p id="live-preview-name" class="text-lg font-medium text-gray-800 mt-4"></p>
+                    <p id="live-preview-type" class="text-sm text-gray-500"></p>
+                    <p id="live-preview-specific-info" class="text-xs text-gray-500 mt-2 text-center"></p>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end space-x-3">
+                <button id="modal-cancel-button" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                    Cancel
+                </button>
+                <button id="modal-save-button" class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-200">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <script type="module">
+        // --- Global State ---
+        const appState = {
+            activeView: 'dashboard',
+            userWidgets: [],
+            selectedWidgetToCustomize: null,
+            notification: {
+                show: false,
+                message: '',
+                type: 'success'
+            },
+            loadingApp: true,
+            loadingWidgets: true,
+            isAppEnabled: true, // New state for app toggle
+            plan: {
+                name: 'Free Trial',
+                daysLeft: 30,
+                canUnlockPremiumWidgets: false // Controls access to certain widgets
+            },
+            initialAvailableWidgets: [
+                { id: 'whatsapp', type: 'WhatsApp', name: 'WhatsApp Chat', description: 'Enable direct chat with customers.', icon: 'MessageCircle', config: { phoneNumber: '', prefilledMessage: '' } },
+                { id: 'add-to-cart', type: 'Sticky Add to Cart', name: 'Sticky Add to Cart', description: 'Boost conversions on product pages.', icon: 'ShoppingCart', config: { buttonText: 'Add to Cart', position: 'bottom' } },
+                { id: 'location', type: 'Location Map', name: 'Location Map', description: 'Show your business location.', icon: 'MapPin', config: { address: '' }, premium: true }, // Marked as premium
+                { id: 'promotion', type: 'Promotion Bar', name: 'Promotion Bar', description: 'Display special offers and announcements.', icon: 'Megaphone', config: { promoText: '', promoUrl: '', expiryDate: '' }, premium: true }, // Marked as premium
+                { id: 'contact-info', type: 'Contact Info', name: 'Contact Info', description: 'Show your contact details.', icon: 'Phone', config: { phone: '', email: '', addressText: '' } },
+                { id: 'donate', type: 'Donate Link', name: 'Donate Link', description: 'Add a link to your donation page.', icon: 'Heart', config: { donateUrl: '', buttonText: 'Donate Now' } },
+                { id: 'social-media', type: 'Social Media', name: 'Social Media Links', description: 'Link to your social profiles.', icon: 'Share2', config: { socialLinks: [] } },
+                { id: 'share-icons', type: 'Share Icons', name: 'Share Icons', description: 'Allow visitors to share your page.', icon: 'Share', config: { sharePlatforms: [] } },
+            ],
+            iconOptions: [
+                'MessageCircle', 'ShoppingCart', 'MapPin', 'Megaphone', 'Phone', 'Heart', 'Share2', 'Share', 'Settings', 'Globe', 'Link', 'Mail', 'Facebook', 'Instagram', 'Twitter', 'Linkedin', 'Youtube', 'HelpCircle', 'BookOpen', 'LifeBuoy', 'Power'
+            ]
+        };
+
+        // --- DOM Elements ---
+        const mainContentEl = document.getElementById('main-content');
+        const sidebarEl = document.getElementById('sidebar');
+        const loadingSpinnerEl = document.getElementById('loading-spinner');
+        const widgetCustomizationModalEl = document.getElementById('widget-customization-modal');
+        const modalCloseButton = document.getElementById('modal-close-button');
+        const modalSaveButton = document.getElementById('modal-save-button');
+        const modalCancelButton = document.getElementById('modal-cancel-button');
+        const notificationContainerEl = document.getElementById('notification-container');
+        const supportSubmenu = document.getElementById('support-submenu');
+        const supportToggleButton = document.getElementById('nav-support');
+        const supportToggleIcon = document.getElementById('support-toggle-icon');
+        const toggleAppButton = document.getElementById('toggle-app-button');
+        const toggleAppText = document.getElementById('toggle-app-text');
+        const planNameDisplay = document.getElementById('current-plan-name');
+        const planDaysLeftDisplay = document.getElementById('current-plan-days-left');
+
+
+        // --- Utility Functions ---
+
+        // Function to render Lucide icons dynamically or an image
+        function renderLucideIcon(iconName, size = 20, className = '', customIconDataUrl = null) {
+            if (customIconDataUrl) {
+                // For custom images, use an <img> tag
+                return `<img src="${customIconDataUrl}" alt="Custom Icon" class="object-contain ${className}" style="width: ${size}px; height: ${size}px;">`;
+            }
+            // For Lucide icons, use the SVG content
+            const iconMap = {
+                Home: '<svg class="lucide lucide-home" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
+                MessageCircle: '<svg class="lucide lucide-message-circle" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>',
+                ShoppingCart: '<svg class="lucide lucide-shopping-cart" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>',
+                MapPin: '<svg class="lucide lucide-map-pin" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18.7c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6z"/><circle cx="12" cy="12" r="3"/></svg>',
+                Megaphone: '<svg class="lucide lucide-megaphone" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18v2H3z"/><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><path d="M12 18v-6"/></svg>',
+                Phone: '<svg class="lucide lucide-phone" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3.01a2 2 0 0 1-2.18 2.01 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.07 2H7.08a2 2 0 0 1 2 1.73c.09.46.17.93.25 1.39a2 2 0 0 1-.45 2.15L6.5 10.27a14.48 14.48 0 0 0 7.94 7.94l3.14-3.14a2 2 0 0 1 2.15-.45c.46.08.93.17 1.39.25a2 2 0 0 1 1.73 2Z"/></svg>',
+                Heart: '<svg class="lucide lucide-heart" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>',
+                Share2: '<svg class="lucide lucide-share-2" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>',
+                Share: '<svg class="lucide lucide-share" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>',
+                Settings: '<svg class="lucide lucide-settings" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.78 1.28a2 2 0 0 0 .73 2.73l.09.09a2 2 0 0 1 0 2.83l-.09.09a2 2 0 0 0-.73 2.73l.78 1.28a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.78-1.28a2 2 0 0 0-.73-2.73l-.09-.09a2 2 0 0 1 0-2.83l.09-.09a2 2 0 0 0 .73-2.73l-.78-1.28a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>',
+                LogOut: '<svg class="lucide lucide-log-out" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>',
+                Plus: '<svg class="lucide lucide-plus" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>',
+                Edit: '<svg class="lucide lucide-edit" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+                Trash2: '<svg class="lucide lucide-trash-2" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>',
+                ToggleRight: '<svg class="lucide lucide-toggle-right" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="22" height="14" x="1" y="5" rx="7" ry="7"/><circle cx="16" cy="12" r="3"/></svg>',
+                ToggleLeft: '<svg class="lucide lucide-toggle-left" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="22" height="14" x="1" y="5" rx="7" ry="7"/><circle cx="8" cy="12" r="3"/></svg>',
+                X: '<svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>',
+                Check: '<svg class="lucide lucide-check" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+                Globe: '<svg class="lucide lucide-globe" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
+                Link: '<svg class="lucide lucide-link" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07L9.54 5.46a5 5 0 0 0 0 7.07"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71a5 5 0 0 0 0-7.07"/></svg>',
+                Mail: '<svg class="lucide lucide-mail" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-10 7L2 7"/></svg>',
+                Facebook: '<svg class="lucide lucide-facebook" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>',
+                Instagram: '<svg class="lucide lucide-instagram" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.5" y1="6.5" y2="6.5"/></svg>',
+                Twitter: '<svg class="lucide lucide-twitter" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.4 3 4l-3 1c1.8 4.3 6 7.4 10.2 7.8-1.5 1.2-3.7 2-6 2 4.6 2.9 10.2 1.4 14-2.4C21.6 4.6 22 4 22 4z"/></svg>',
+                Linkedin: '<svg class="lucide lucide-linkedin" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>',
+                Youtube: '<svg class="lucide lucide-youtube" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.85 2.85A2 2 0 0 0 2 4.28v15.44a2 2 0 0 0 .85 1.43A2 2 0 0 0 4.28 22h15.44a2 2 0 0 0 1.43-.85 2 2 0 0 0 .85-1.43V4.28a2 2 0 0 0-.85-1.43A2 2 0 0 0 19.72 2H4.28a2 2 0 0 0-1.43.85z"/><path d="m10 15 5-3-5-3v6z"/></svg>',
+                ClipboardCopy: '<svg class="lucide lucide-clipboard-copy" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/><path d="M16 4h2a2 2 0 0 1 2 2v4"/><path d="M21 14H11"/></svg>',
+                LifeBuoy: '<svg class="lucide lucide-life-buoy" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M10 16.5 16.5 10"/><path d="M12 12 4 4"/><path d="m12 12 8 8"/><path d="m12 12-8 8"/></svg>',
+                ChevronRight: '<svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+                ChevronDown: '<svg class="lucide lucide-chevron-down" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>',
+                HelpCircle: '<svg class="lucide lucide-help-circle" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+                BookOpen: '<svg class="lucide lucide-book-open" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>',
+                Power: '<svg class="lucide lucide-power" xmlns="http://www.w3.org/2000/svg" width="SIZE" height="SIZE" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.36 6.64A9 9 0 1 1 5.64 17.36L12 12"/></svg>',
+            };
+            const svgContent = iconMap[iconName] || iconMap['Globe']; // Default to Globe
+            return svgContent.replace(/SIZE/g, size).replace(/CLASS_NAME/g, className);
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                return true;
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                return false;
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function showNotification(message, type) {
+            appState.notification = { show: true, message, type };
+            renderNotification();
+            setTimeout(() => {
+                appState.notification.show = false;
+                renderNotification();
+            }, 3000);
+        }
+
+        function renderNotification() {
+            notificationContainerEl.innerHTML = '';
+            if (appState.notification.show) {
+                const { message, type } = appState.notification;
+                const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+                const textColor = 'text-white';
+                const iconSvg = type === 'success' ? renderLucideIcon('Check', 20) : renderLucideIcon('X', 20);
+
+                const notificationDiv = document.createElement('div');
+                notificationDiv.className = `fixed bottom-4 right-4 p-4 rounded-lg shadow-lg flex items-center space-x-3 ${bgColor} ${textColor} z-50`;
+                notificationDiv.innerHTML = `
+                    ${iconSvg}
+                    <span>${message}</span>
+                    <button class="ml-auto p-1 rounded-full hover:bg-white hover:bg-opacity-20 notification-close-btn">
+                        ${renderLucideIcon('X', 16)}
+                    </button>
+                `;
+                notificationContainerEl.appendChild(notificationDiv);
+
+                notificationDiv.querySelector('.notification-close-btn').onclick = () => {
+                    appState.notification.show = false;
+                    renderNotification();
+                };
+            }
+        }
+
+        // --- Local Storage Persistence Functions ---
+        const LOCAL_STORAGE_WIDGETS_KEY = 'mobile_widgets_dashboard_widgets';
+        const LOCAL_STORAGE_APP_ENABLED_KEY = 'mobile_widgets_dashboard_isAppEnabled';
+        const LOCAL_STORAGE_PLAN_KEY = 'mobile_widgets_dashboard_plan';
+
+        function loadStateFromLocalStorage() {
+            const storedWidgets = localStorage.getItem(LOCAL_STORAGE_WIDGETS_KEY);
+            if (storedWidgets) {
+                try {
+                    appState.userWidgets = JSON.parse(storedWidgets);
+                } catch (e) {
+                    console.error("Error parsing stored widgets:", e);
+                    appState.userWidgets = [];
+                }
+            } else {
+                appState.userWidgets = [];
+            }
+
+            const storedAppEnabled = localStorage.getItem(LOCAL_STORAGE_APP_ENABLED_KEY);
+            if (storedAppEnabled !== null) {
+                appState.isAppEnabled = JSON.parse(storedAppEnabled);
+            }
+
+            // Load plan state
+            const storedPlan = localStorage.getItem(LOCAL_STORAGE_PLAN_KEY);
+            if (storedPlan) {
+                try {
+                    appState.plan = JSON.parse(storedPlan);
+                } catch (e) {
+                    console.error("Error parsing stored plan:", e);
+                    // Fallback to default plan if parsing fails
+                    appState.plan = { name: 'Free Trial', daysLeft: 30, canUnlockPremiumWidgets: false };
+                }
+            }
+
+            appState.loadingApp = false;
+            appState.loadingWidgets = false;
+            console.log("Loaded state from local storage:", appState);
+        }
+
+        function saveStateToLocalStorage() {
+            localStorage.setItem(LOCAL_STORAGE_WIDGETS_KEY, JSON.stringify(appState.userWidgets));
+            localStorage.setItem(LOCAL_STORAGE_APP_ENABLED_KEY, JSON.stringify(appState.isAppEnabled));
+            localStorage.setItem(LOCAL_STORAGE_PLAN_KEY, JSON.stringify(appState.plan));
+            console.log("Saved state to local storage:", appState);
+        }
+
+        // --- App Initialization ---
+        window.onload = async () => {
+            loadStateFromLocalStorage();
+            loadingSpinnerEl.classList.add('hidden'); // Hide loading spinner
+            renderApp(); // Initial render after state is loaded
+        };
+
+        // --- Render Functions ---
+
+        function renderApp() {
+            // Update sidebar active state
+            document.querySelectorAll('#sidebar button').forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                btn.classList.add('hover:bg-gray-700', 'text-gray-300', 'hover:text-white');
+            });
+            const activeNavButton = document.getElementById(`nav-${appState.activeView}`);
+            if (activeNavButton) {
+                activeNavButton.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+                activeNavButton.classList.remove('hover:bg-gray-700', 'text-gray-300', 'hover:text-white');
+            }
+
+            // Update Plan Display
+            planNameDisplay.textContent = appState.plan.name;
+            planDaysLeftDisplay.textContent = `${appState.plan.daysLeft} days left`;
+
+            // Handle app enable/disable state for the single toggle button
+            if (appState.isAppEnabled) {
+                toggleAppText.textContent = 'Disable App Completely';
+                toggleAppButton.classList.remove('bg-green-500', 'hover:bg-green-600');
+                toggleAppButton.classList.add('bg-red-500', 'hover:bg-red-600');
+                mainContentEl.style.overflowY = 'auto'; // Ensure scrolling is enabled
+            } else {
+                toggleAppText.textContent = 'Enable App';
+                toggleAppButton.classList.remove('bg-red-500', 'hover:bg-red-600');
+                toggleAppButton.classList.add('bg-green-500', 'hover:bg-green-600');
+                mainContentEl.style.overflowY = 'hidden'; // Prevent scrolling when disabled
+            }
+
+            // Clear main content (excluding the sticky header)
+            const contentArea = mainContentEl.querySelector('div:not(#app-header):not(#loading-spinner)');
+            if (contentArea) contentArea.remove(); // Remove previous content, but keep header
+
+            if (appState.loadingApp) {
+                mainContentEl.appendChild(loadingSpinnerEl);
+                loadingSpinnerEl.classList.remove('hidden');
+                return;
+            }
+
+            // Render content based on active view, and disable interaction if app is not enabled
+            if (appState.isAppEnabled) {
+                switch (appState.activeView) {
+                    case 'dashboard':
+                        renderDashboardOverview();
+                        break;
+                    case 'myWidgets':
+                        renderMyWidgetsList();
+                        break;
+                    case 'availableWidgets':
+                        renderAvailableWidgetsList();
+                        break;
+                    case 'settings':
+                        renderSettings();
+                        break;
+                    case 'faqs':
+                        renderFAQs();
+                        break;
+                    case 'setupGuide':
+                        renderSetupGuide();
+                        break;
+                    case 'contactUs':
+                        renderContactUs();
+                        break;
+                    default:
+                        renderDashboardOverview();
+                }
+            } else {
+                // If app is disabled, show a simplified "disabled" view or just keep the current content static,
+                // relying on the header button to re-enable.
+                const disabledMessageDiv = document.createElement('div');
+                disabledMessageDiv.className = "p-8 text-center text-gray-600 min-h-screen flex flex-col items-center justify-center";
+                disabledMessageDiv.innerHTML = `
+                    <svg class="lucide lucide-power text-gray-500 mb-6" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.36 6.64A9 9 0 1 1 5.64 17.36L12 12"/></svg>
+                    <h2 class="text-3xl font-bold text-gray-700 mb-4">App is Currently Disabled</h2>
+                    <p class="text-lg text-gray-600">Click "Enable App" in the header to reactivate your widgets.</p>
+                `;
+                mainContentEl.appendChild(disabledMessageDiv);
+            }
+        }
+
+        function renderDashboardOverview() {
+            const dashboardContent = document.createElement('div');
+            dashboardContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+
+            // Filter for active widgets for the live preview
+            const activeWidgets = appState.userWidgets.filter(widget => widget.isActive);
+            const previewIconsHtml = activeWidgets.length > 0
+                ? activeWidgets.slice(0, 5).map(widget => `
+                    <div class="p-2 bg-indigo-100 rounded-full flex-shrink-0 shadow-sm" title="${widget.name}">
+                        ${renderLucideIcon(widget.icon, 28, 'text-indigo-600', widget.customIconDataUrl)}
+                    </div>
+                `).join('')
+                : `<p class="text-gray-500 text-center">No active widgets yet. Add some from "Available Widgets"!</p>`;
+
+            dashboardContent.innerHTML = `
+                <h1 class="text-4xl font-extrabold text-gray-900 mb-8">Welcome to Your Dashboard!</h1>
+                <p class="text-lg text-gray-700 mb-10">
+                    Manage and customize your mobile widgets with ease.
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-semibold text-gray-800">Active Widgets</h2>
+                            ${renderLucideIcon('Share2', 28, 'text-indigo-500')}
+                        </div>
+                        <p id="dashboard-widget-count" class="text-5xl font-bold text-indigo-600">${activeWidgets.length}</p>
+                        <p class="text-sm text-gray-500 mt-2">Widgets currently deployed on your site.</p>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-800">New Ideas</h2>
+                        ${renderLucideIcon('Plus', 28, 'text-purple-500')}
+                        <p class="text-lg text-gray-700">Explore new widget types in "Available Widgets".</p>
+                        <button id="browse-widgets-btn" class="mt-4 px-5 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 shadow-md">
+                            Browse Widgets
+                        </button>
+                    </div>
+                </div>
+            `;
+            mainContentEl.appendChild(dashboardContent);
+            document.getElementById('browse-widgets-btn').onclick = () => {
+                appState.activeView = 'availableWidgets';
+                renderApp();
+            };
+        }
+
+        function renderMyWidgetsList() {
+            console.log("Rendering My Widgets List. Current appState.userWidgets:", appState.userWidgets);
+            if (appState.loadingWidgets) {
+                const loadingDiv = document.createElement('div');
+                loadingDiv.className = "p-8 text-center text-gray-600";
+                loadingDiv.innerHTML = `
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
+                    Loading your widgets...
+                `;
+                mainContentEl.appendChild(loadingDiv);
+                return;
+            }
+
+            if (appState.userWidgets.length === 0) {
+                const emptyStateDiv = document.createElement('div');
+                emptyStateDiv.className = "p-8 text-center text-gray-600";
+                emptyStateDiv.innerHTML = `
+                    <p class="text-2xl font-semibold mb-4">No widgets enabled yet!</p>
+                    <p class="mb-6">Click on "Available Widgets" to add your first widget.</p>
+                    <button id="add-new-widget-from-empty" class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition-colors duration-200">
+                        Add New Widget
+                    </button>
+                `;
+                mainContentEl.appendChild(emptyStateDiv);
+                document.getElementById('add-new-widget-from-empty').onclick = () => {
+                    appState.activeView = 'availableWidgets';
+                    renderApp();
+                };
+                return;
+            }
+
+            let widgetsHtml = appState.userWidgets.map(widget => {
+                console.log(`Widget ${widget.id}: isActive = ${widget.isActive}`);
+                const IconHtml = renderLucideIcon(widget.icon, 24, 'text-indigo-600', widget.customIconDataUrl);
+                const statusClasses = widget.isActive
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-gray-100 text-gray-700';
+                // Toggle icon should reflect the *current* state.
+                // If widget is active (true), show ToggleRight (on position).
+                // If widget is inactive (false), show ToggleLeft (off position).
+                const toggleIconSvg = widget.isActive ? renderLucideIcon('ToggleRight', 20) : renderLucideIcon('ToggleLeft', 20);
+                const toggleTitle = widget.isActive ? 'Deactivate Widget' : 'Activate Widget';
+
+                // Corrected color logic for the toggle button
+                const toggleButtonClasses = widget.isActive
+                    ? 'bg-green-100 text-green-600 hover:bg-green-200' // Active: green button to deactivate
+                    : 'bg-red-100 text-red-600 hover:bg-red-200';   // Inactive: red button to activate
+
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col h-full">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-indigo-100 rounded-full mr-4 flex-shrink-0">
+                                    ${IconHtml}
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-semibold text-gray-800">${widget.name}</h3>
+                                    <p class="text-sm text-gray-500">${widget.type}</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 text-xs font-medium rounded-full ${statusClasses}">
+                                ${widget.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                        </div>
+                        <p class="text-gray-600 mb-4 flex-grow">${widget.hoverMessage || 'No hover message set.'}</p>
+                        <div class="flex justify-end space-x-2 mt-auto">
+                            <button data-widget-id="${widget.id}" class="toggle-widget-btn p-2 rounded-full transition-colors duration-200 ${toggleButtonClasses}" title="${toggleTitle}">
+                                ${toggleIconSvg}
+                            </button>
+                            <button data-widget-id="${widget.id}" class="edit-widget-btn p-2 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 transition-colors duration-200" title="Edit Widget">
+                                ${renderLucideIcon('Edit', 20)}
+                            </button>
+                            <button data-widget-id="${widget.id}" class="delete-widget-btn p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors duration-200" title="Delete Widget">
+                                ${renderLucideIcon('Trash2', 20)}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            const myWidgetsContent = document.createElement('div');
+            myWidgetsContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+            myWidgetsContent.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">My Widgets</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${widgetsHtml}
+                </div>
+            `;
+            mainContentEl.appendChild(myWidgetsContent);
+
+            // Attach event listeners to newly rendered buttons
+            mainContentEl.querySelectorAll('.toggle-widget-btn').forEach(button => {
+                button.onclick = (e) => {
+                    const widgetId = e.currentTarget.dataset.widgetId;
+                    const widget = appState.userWidgets.find(w => w.id === widgetId);
+                    if (widget) handleToggleWidget(widget);
+                };
+            });
+            mainContentEl.querySelectorAll('.edit-widget-btn').forEach(button => {
+                button.onclick = (e) => {
+                    const widgetId = e.currentTarget.dataset.widgetId;
+                    const widget = appState.userWidgets.find(w => w.id === widgetId);
+                    if (widget) handleEditWidget(widget);
+                };
+            });
+            mainContentEl.querySelectorAll('.delete-widget-btn').forEach(button => {
+                button.onclick = (e) => {
+                    const widgetId = e.currentTarget.dataset.widgetId;
+                    handleDeleteWidget(widgetId);
+                };
+            });
+        }
+
+        function renderAvailableWidgetsList() {
+            let availableWidgetsHtml = appState.initialAvailableWidgets.map(widget => {
+                const IconHtml = renderLucideIcon(widget.icon, 36, 'text-indigo-600');
+                const isPremiumLocked = widget.premium && !appState.plan.canUnlockPremiumWidgets;
+                const buttonClasses = isPremiumLocked
+                    ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
+                    : 'bg-indigo-600 text-white hover:bg-indigo-700';
+                const buttonText = isPremiumLocked ? 'Upgrade to unlock' : 'Add Widget';
+
+                return `
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200 flex flex-col items-center text-center h-full relative">
+                        ${isPremiumLocked ? `<div class="absolute top-2 right-2 px-2 py-1 bg-yellow-400 text-yellow-900 text-xs font-semibold rounded-full">Premium</div>` : ''}
+                        <div class="p-4 bg-indigo-100 rounded-full mb-4 flex-shrink-0">
+                            ${IconHtml}
+                        </div>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">${widget.name}</h3>
+                        <p class="text-gray-600 text-sm mb-4 flex-grow">${widget.description}</p>
+                        <button data-widget-id="${widget.id}" class="add-widget-btn mt-auto px-5 py-2 rounded-lg shadow-md transition-colors duration-200 ${buttonClasses}" ${isPremiumLocked ? 'disabled' : ''}>
+                            ${buttonText}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            const availableWidgetsContent = document.createElement('div');
+            availableWidgetsContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+            availableWidgetsContent.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Available Widgets</h1>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    ${availableWidgetsHtml}
+                </div>
+            `;
+            mainContentEl.appendChild(availableWidgetsContent);
+
+            mainContentEl.querySelectorAll('.add-widget-btn').forEach(button => {
+                button.onclick = (e) => {
+                    const widgetId = e.currentTarget.dataset.widgetId;
+                    const widgetType = appState.initialAvailableWidgets.find(w => w.id === widgetId);
+                    if (widgetType && !widgetType.premium) handleAddWidget(widgetType); // Only add if not premium or unlocked
+                };
+            });
+        }
+
+        function renderSettings() {
+            const settingsContent = document.createElement('div');
+            settingsContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+            settingsContent.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Settings</h1>
+                <p class="text-gray-700">Account settings and billing information would go here.</p>
+                <div class="mt-8 p-6 bg-white rounded-xl shadow-md border border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Manage Plan</h2>
+                    <p class="text-gray-700 mb-4">
+                        Your current plan is: <span class="font-bold text-indigo-600">${appState.plan.name}</span>.
+                        You have <span class="font-bold text-indigo-600">${appState.plan.daysLeft} days left</span>.
+                    </p>
+                    <button id="upgrade-plan-button" class="px-6 py-3 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 transition-colors duration-200">
+                        Upgrade Plan
+                    </button>
+                    <p class="text-sm text-gray-500 mt-2">
+                        (This is a demo. Clicking "Upgrade Plan" will unlock premium widgets.)
+                    </p>
+                </div>
+            `;
+            mainContentEl.appendChild(settingsContent);
+
+            document.getElementById('upgrade-plan-button').onclick = () => {
+                appState.plan.name = 'Premium Plan';
+                appState.plan.daysLeft = 365;
+                appState.plan.canUnlockPremiumWidgets = true;
+                saveStateToLocalStorage();
+                showNotification('Plan upgraded! Premium widgets unlocked.', 'success');
+                renderApp(); // Re-render to reflect changes
+            };
+        }
+
+        function renderFAQs() {
+            const faqsContent = document.createElement('div');
+            faqsContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+            faqsContent.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h1>
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">How do I add a new widget?</h3>
+                        <p class="text-gray-700">Navigate to "Available Widgets" from the sidebar. Click the "Add Widget" button next to the widget you wish to use. You can then customize its settings and save it.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">How do I activate or deactivate a widget?</h3>
+                        <p class="text-gray-700">Go to "My Widgets". Each widget card has a toggle button (left/right arrow icon). Click it to change the widget's active status.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Can I use my own icon for a widget?</h3>
+                        <p class="text-gray-700">Yes! In the widget customization modal, you can now select a default icon or upload your own image (PNG, JPG, SVG) to use as the widget icon.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">My app is disabled, how do I enable it?</h3>
+                        <p class="text-gray-700">If the app is disabled, the "Disable App Completely" button in the header will change to "Enable App". Click it to reactivate all your widgets.</p>
+                    </div>
+                </div>
+            `;
+            mainContentEl.appendChild(faqsContent);
+        }
+
+        function renderSetupGuide() {
+            const setupGuideContent = document.createElement('div');
+            setupGuideContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+            setupGuideContent.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Setup Guide</h1>
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 1: Get Started</h3>
+                        <p class="text-gray-700">Upon loading the dashboard, your widget data is stored locally in your browser. There is no user ID to manage.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 2: Add Your First Widget</h3>
+                        <p class="text-gray-700">Navigate to the "Available Widgets" section from the left sidebar. Browse through the list of available widget types. Click "Add Widget" for the one you want to configure.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 3: Customize Your Widget</h3>
+                        <p class="text-gray-700">A customization modal will appear. Here, you can set a custom name, a hover message, choose an icon from our library, or upload your own. Fill in any specific configuration details relevant to the widget type (e.g., WhatsApp number for the WhatsApp Chat widget). The live preview on the right will show you how your widget will look.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 4: Save and Manage</h3>
+                        <p class="text-gray-700">After customizing, click "Save Changes". Your new widget will appear under "My Widgets". From there, you can activate/deactivate it, edit its settings further, or delete it. Remember that all changes are saved directly to your browser's local storage.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Step 5: App-Wide Control</h3>
+                        <p class="text-gray-700">Use the "Disable App Completely" button in the top right header to toggle the visibility of all your widgets on your website. This is useful for maintenance or temporary deactivation.</p>
+                    </div>
+                </div>
+            `;
+            mainContentEl.appendChild(setupGuideContent);
+        }
+
+        function renderContactUs() {
+            const contactUsContent = document.createElement('div');
+            contactUsContent.className = "p-8 bg-gray-50 min-h-screen rounded-lg shadow-inner";
+            contactUsContent.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900 mb-8">Contact Us</h1>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-gray-200">
+                    <p class="text-gray-700 mb-4">If you have any questions, feedback, or need support, please don't hesitate to reach out to us.</p>
+                    <p class="text-gray-700 font-semibold">Support Email: <a href="mailto:support@mobilewidgets.com" class="text-indigo-600 hover:underline">support@mobilewidgets.com</a></p>
+                    <p class="text-gray-700 mt-4">We aim to respond to all inquiries within 24-48 hours.</p>
+                </div>
+            `;
+            mainContentEl.appendChild(contactUsContent);
+        }
+
+        function renderWidgetCustomizationModal() {
+            const modalTitleEl = document.getElementById('modal-title');
+            const widgetNameInput = document.getElementById('widget-name');
+            const hoverMessageInput = document.getElementById('hover-message');
+            const widgetIconSelect = document.getElementById('widget-icon');
+            const widgetIconPreview = document.getElementById('widget-icon-preview');
+            const customIconUploadInput = document.getElementById('custom-icon-upload');
+            const specificFieldsContainer = document.getElementById('specific-fields-container');
+            const livePreviewIcon = document.getElementById('live-preview-icon');
+            const livePreviewHoverMessage = document.getElementById('live-preview-hover-message');
+            const livePreviewName = document.getElementById('live-preview-name');
+            const livePreviewType = document.getElementById('live-preview-type');
+            const livePreviewSpecificInfo = document.getElementById('live-preview-specific-info');
+
+            const widget = appState.selectedWidgetToCustomize;
+            if (!widget) {
+                widgetCustomizationModalEl.classList.add('hidden');
+                return;
+            }
+
+            widgetCustomizationModalEl.classList.remove('hidden');
+            modalTitleEl.textContent = `Customize ${widget.name}`;
+            widgetNameInput.value = widget.name;
+            hoverMessageInput.value = widget.hoverMessage;
+
+            // Populate icon select
+            widgetIconSelect.innerHTML = appState.iconOptions.map(iconName =>
+                `<option value="${iconName}" ${widget.icon === iconName && !widget.customIconDataUrl ? 'selected' : ''}>${iconName}</option>`
+            ).join('');
+            // Disable select if custom icon is uploaded
+            widgetIconSelect.disabled = !!widget.customIconDataUrl;
+
+            // Clear file input if no custom icon is set
+            customIconUploadInput.value = '';
+
+            // Initial preview update
+            updateLivePreview();
+
+            // Event listeners for modal inputs
+            widgetNameInput.oninput = updateFormData;
+            hoverMessageInput.oninput = updateFormData;
+            widgetIconSelect.onchange = updateFormData;
+            customIconUploadInput.onchange = handleCustomIconUpload;
+
+
+            function updateFormData(e) {
+                const { name, value, type, checked } = e.target;
+                let updatedValue = type === 'checkbox' ? checked : value;
+
+                if (name.startsWith('config.')) {
+                    const configKey = name.split('.')[1];
+                    appState.selectedWidgetToCustomize.config = {
+                        ...appState.selectedWidgetToCustomize.config,
+                        [configKey]: updatedValue
+                    };
+                } else if (name.startsWith('socialLinks.')) {
+                    const [_, index, key] = name.split('.');
+                    const newSocialLinks = [...(appState.selectedWidgetToCustomize.config.socialLinks || [])];
+                    newSocialLinks[parseInt(index)][key] = updatedValue;
+                    appState.selectedWidgetToCustomize.config = {
+                        ...appState.selectedWidgetToCustomize.config,
+                        socialLinks: newSocialLinks
+                    };
+                } else if (name.startsWith('sharePlatforms.')) {
+                    const platform = value;
+                    const isChecked = checked;
+                    const currentPlatforms = new Set(appState.selectedWidgetToCustomize.config.sharePlatforms || []);
+                    if (isChecked) {
+                        currentPlatforms.add(platform);
+                    } else {
+                        currentPlatforms.delete(platform);
+                    }
+                    appState.selectedWidgetToCustomize.config = {
+                        ...appState.selectedWidgetToCustomize.config,
+                        sharePlatforms: Array.from(currentPlatforms)
+                    };
+                } else {
+                    appState.selectedWidgetToCustomize[name] = updatedValue;
+                }
+                updateLivePreview();
+                renderSpecificFields(); // Re-render specific fields if needed (e.g., for social links add/remove)
+            }
+
+            function handleCustomIconUpload(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    appState.selectedWidgetToCustomize.customIconDataUrl = null;
+                    widgetIconSelect.disabled = false; // Re-enable select if no file
+                    updateLivePreview();
+                    return;
+                }
+
+                if (file.size > 1024 * 1024) { // 1MB limit for demo
+                    showNotification('File size exceeds 1MB. Please choose a smaller image.', 'error');
+                    event.target.value = ''; // Clear the input
+                    appState.selectedWidgetToCustomize.customIconDataUrl = null;
+                    widgetIconSelect.disabled = false;
+                    updateLivePreview();
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    appState.selectedWidgetToCustomize.customIconDataUrl = e.target.result;
+                    widgetIconSelect.disabled = true; // Disable select when custom icon is used
+                    updateLivePreview();
+                };
+                reader.onerror = () => {
+                    showNotification('Failed to read file.', 'error');
+                    appState.selectedWidgetToCustomize.customIconDataUrl = null;
+                    widgetIconSelect.disabled = false;
+                    updateLivePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function updateLivePreview() {
+                const currentWidget = appState.selectedWidgetToCustomize;
+                // Determine which icon source to use for preview
+                const iconSource = currentWidget.customIconDataUrl || currentWidget.icon;
+
+                // Render icon for widgetIconPreview (small icon next to select)
+                widgetIconPreview.innerHTML = renderLucideIcon(currentWidget.icon, 24, 'text-indigo-600', currentWidget.customIconDataUrl);
+                // Render icon for livePreviewIcon (large icon in preview area)
+                livePreviewIcon.innerHTML = renderLucideIcon(currentWidget.icon, 48, 'text-indigo-600', currentWidget.customIconDataUrl);
+
+                livePreviewHoverMessage.textContent = currentWidget.hoverMessage;
+                livePreviewName.textContent = currentWidget.name;
+                livePreviewType.textContent = currentWidget.type;
+
+                let specificInfo = '';
+                switch (currentWidget.type) {
+                    case 'WhatsApp':
+                        if (currentWidget.config?.phoneNumber) specificInfo = `Phone: ${currentWidget.config.phoneNumber}`;
+                        break;
+                    case 'Promotion Bar':
+                        if (currentWidget.config?.promoText) specificInfo = currentWidget.config.promoText;
+                        break;
+                    case 'Contact Info':
+                        if (currentWidget.config?.phone) specificInfo += `Phone: ${currentWidget.config.phone}`;
+                        if (currentWidget.config?.email) specificInfo += (specificInfo ? ', ' : '') + `Email: ${currentWidget.config.email}`;
+                        break;
+                    // Add more specific info for other types if desired
+                }
+                livePreviewSpecificInfo.textContent = specificInfo;
+            }
+
+            function renderSpecificFields() {
+                specificFieldsContainer.innerHTML = ''; // Clear previous fields
+                const currentWidget = appState.selectedWidgetToCustomize;
+                let fieldsHtml = '';
+
+                switch (currentWidget.type) {
+                    case 'WhatsApp':
+                        fieldsHtml = `
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-phoneNumber">
+                                WhatsApp Phone Number
+                            </label>
+                            <input type="text" id="config-phoneNumber" name="config.phoneNumber" value="${currentWidget.config?.phoneNumber || ''}" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" placeholder="+1234567890">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-prefilledMessage">
+                                Pre-filled Message (Optional)
+                            </label>
+                            <textarea id="config-prefilledMessage" name="config.prefilledMessage" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" rows="3" placeholder="Hello, I have a question about...">${currentWidget.config?.prefilledMessage || ''}</textarea>
+                        `;
+                        break;
+                    case 'Sticky Add to Cart':
+                        fieldsHtml = `
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-buttonText">
+                                Button Text
+                            </label>
+                            <input type="text" id="config-buttonText" name="config.buttonText" value="${currentWidget.config?.buttonText || 'Add to Cart'}" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" placeholder="Add to Cart">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-position">
+                                Position
+                            </label>
+                            <select id="config-position" name="config.position" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4">
+                                <option value="bottom" ${currentWidget.config?.position === 'bottom' ? 'selected' : ''}>Bottom</option>
+                                <option value="top" ${currentWidget.config?.position === 'top' ? 'selected' : ''}>Top</option>
+                            </select>
+                        `;
+                        break;
+                    case 'Location Map':
+                        fieldsHtml = `
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-address">
+                                Full Address
+                            </label>
+                            <textarea id="config-address" name="config.address" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" rows="3" placeholder="123 Main St, Anytown, USA">${currentWidget.config?.address || ''}</textarea>
+                            <p class="text-sm text-gray-500 mb-4">
+                                (This will be used to generate a map link or embed.)
+                            </p>
+                        `;
+                        break;
+                    case 'Promotion Bar':
+                        fieldsHtml = `
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-promoText">
+                                Promotion Message
+                            </label>
+                            <textarea id="config-promoText" name="config.promoText" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" rows="3" placeholder="Get 20% off your first order! Use code: SAVE20">${currentWidget.config?.promoText || ''}</textarea>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-promoUrl">
+                                Promotion URL
+                            </label>
+                            <input type="url" id="config-promoUrl" name="config.promoUrl" value="${currentWidget.config?.promoUrl || ''}" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" placeholder="https://yourwebsite.com/promo">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-expiryDate">
+                                Expiry Date (Optional)
+                            </label>
+                            <input type="date" id="config-expiryDate" name="config.expiryDate" value="${currentWidget.config?.expiryDate || ''}" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4">
+                        `;
+                        break;
+                    case 'Contact Info':
+                        fieldsHtml = `
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-phone">
+                                Phone Number
+                            </label>
+                            <input type="text" id="config-phone" name="config.phone" value="${currentWidget.config?.phone || ''}" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" placeholder="+1 (555) 123-4567">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-email">
+                                Email Address
+                            </label>
+                            <input type="email" id="config-email" name="config.email" value="${currentWidget.config?.email || ''}" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" placeholder="info@yourcompany.com">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-addressText">
+                                Address Text
+                            </label>
+                            <textarea id="config-addressText" name="config.addressText" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" rows="2" placeholder="123 Business Rd, Suite 400, City, Country">${currentWidget.config?.addressText || ''}</textarea>
+                        `;
+                        break;
+                    case 'Donate Link':
+                        fieldsHtml = `
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-donateUrl">
+                                Donation Page URL
+                            </label>
+                            <input type="url" id="config-donateUrl" name="config.donateUrl" value="${currentWidget.config?.donateUrl || ''}" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" placeholder="https://yourwebsite.com/donate">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="config-buttonText-donate">
+                                Button Text
+                            </label>
+                            <input type="text" id="config-buttonText-donate" name="config.buttonText" value="${currentWidget.config?.buttonText || 'Donate Now'}" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4" placeholder="Donate Now">
+                        `;
+                        break;
+                    case 'Social Media':
+                        const socialPlatforms = ['Facebook', 'Instagram', 'Twitter', 'Linkedin', 'Youtube', 'Globe'];
+                        let socialLinksHtml = (currentWidget.config?.socialLinks || []).map((link, index) => `
+                            <div class="flex items-center space-x-2 mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <select name="socialLinks.${index}.platform" class="shadow appearance-none border rounded-lg py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 w-1/3">
+                                    <option value="">Select Platform</option>
+                                    ${socialPlatforms.map(platform => `<option value="${platform}" ${link.platform === platform ? 'selected' : ''}>${platform}</option>`).join('')}
+                                </select>
+                                <input type="url" name="socialLinks.${index}.url" value="${link.url}" class="shadow appearance-none border rounded-lg w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="https://facebook.com/yourpage">
+                                <button data-index="${index}" class="remove-social-link-btn p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors duration-200" title="Remove Link">
+                                    ${renderLucideIcon('Trash2', 18)}
+                                </button>
+                            </div>
+                        `).join('');
+
+                        fieldsHtml = `
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Social Links</h4>
+                            <div id="social-links-list">${socialLinksHtml}</div>
+                            <button id="add-social-link-btn" class="px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors duration-200 shadow-md flex items-center">
+                                ${renderLucideIcon('Plus', 18, 'mr-2')} Add Social Link
+                            </button>
+                        `;
+                        break;
+                    case 'Share Icons':
+                        const sharePlatforms = ['Facebook', 'Twitter', 'Linkedin', 'Mail', 'WhatsApp'];
+                        fieldsHtml = `
+                            <h4 class="text-lg font-semibold text-gray-800 mb-3">Select Share Platforms</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                ${sharePlatforms.map(platform => `
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="share-${platform}" name="sharePlatforms.${platform}" value="${platform}" ${currentWidget.config?.sharePlatforms?.includes(platform) ? 'checked' : ''} class="form-checkbox h-5 w-5 text-indigo-600 rounded-md focus:ring-indigo-500">
+                                        <label for="share-${platform}" class="ml-2 text-gray-700">${platform}</label>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                        break;
+                    default:
+                        fieldsHtml = `<p class="text-gray-600">No specific customization fields for this widget type.</p>`;
+                }
+                specificFieldsContainer.innerHTML = fieldsHtml;
+
+                // Attach event listeners for dynamically added fields
+                specificFieldsContainer.querySelectorAll('input, textarea, select').forEach(input => {
+                    input.oninput = updateFormData;
+                    input.onchange = updateFormData; // For select and checkbox
+                });
+
+                if (currentWidget.type === 'Social Media') {
+                    document.getElementById('add-social-link-btn').onclick = () => {
+                        appState.selectedWidgetToCustomize.config.socialLinks = [...(appState.selectedWidgetToCustomize.config.socialLinks || []), { platform: '', url: '' }];
+                        renderSpecificFields(); // Re-render to show new input
+                        updateLivePreview();
+                    };
+                    specificFieldsContainer.querySelectorAll('.remove-social-link-btn').forEach(button => {
+                        button.onclick = (e) => {
+                            const indexToRemove = parseInt(e.currentTarget.dataset.index);
+                            appState.selectedWidgetToCustomize.config.socialLinks = (appState.selectedWidgetToCustomize.config.socialLinks || []).filter((_, i) => i !== indexToRemove);
+                            renderSpecificFields(); // Re-render to remove input
+                            updateLivePreview();
+                        };
+                    });
+                }
+            }
+
+            renderSpecificFields(); // Initial render of specific fields
+        }
+
+        // --- Event Handlers ---
+
+        sidebarEl.addEventListener('click', (e) => {
+            const button = e.target.closest('button');
+            if (button) {
+                const view = button.id.replace('nav-', '');
+                if (view) {
+                    // Toggle support submenu
+                    if (view === 'support') {
+                        supportSubmenu.classList.toggle('hidden');
+                        supportToggleIcon.classList.toggle('rotate-90'); // Rotate icon
+                    } else {
+                        // If clicking another main nav item, hide submenu
+                        supportSubmenu.classList.add('hidden');
+                        supportToggleIcon.classList.remove('rotate-90');
+                    }
+                    // Change active view unless it's just the support toggle
+                    if (!['support'].includes(view)) {
+                         appState.activeView = view;
+                         renderApp();
+                    }
+                }
+            }
+        });
+
+        modalCloseButton.onclick = () => {
+            appState.selectedWidgetToCustomize = null;
+            widgetCustomizationModalEl.classList.add('hidden');
+        };
+
+        modalCancelButton.onclick = () => {
+            appState.selectedWidgetToCustomize = null;
+            widgetCustomizationModalEl.classList.add('hidden');
+        };
+
+        modalSaveButton.onclick = async () => {
+            const updatedWidget = { ...appState.selectedWidgetToCustomize }; // Create a copy to save
+
+            // Find if the widget already exists in userWidgets
+            const existingWidgetIndex = appState.userWidgets.findIndex(w => w.id === updatedWidget.id);
+
+            if (existingWidgetIndex !== -1) {
+                // Update existing widget
+                appState.userWidgets[existingWidgetIndex] = {
+                    ...updatedWidget,
+                    updatedAt: Date.now()
+                };
+                showNotification('Widget updated successfully!', 'success');
+            } else {
+                // Add new widget
+                appState.userWidgets.push({
+                    ...updatedWidget,
+                    createdAt: Date.now(),
+                    updatedAt: Date.now()
+                });
+                showNotification('Widget added successfully!', 'success');
+            }
+
+            saveStateToLocalStorage(); // Save changes to local storage
+            appState.selectedWidgetToCustomize = null;
+            widgetCustomizationModalEl.classList.add('hidden');
+            renderApp(); // Re-render the current view to reflect changes
+        };
+
+        // Main header toggle button
+        toggleAppButton.onclick = () => {
+            appState.isAppEnabled = !appState.isAppEnabled;
+            saveStateToLocalStorage();
+            showNotification(`App is now ${appState.isAppEnabled ? 'enabled' : 'disabled'}.`, 'success');
+            renderApp();
+        };
+
+        // --- Widget Actions (called from renderMyWidgetsList) ---
+        async function handleAddWidget(widgetType) {
+            const newWidget = {
+                ...widgetType,
+                id: Date.now().toString(), // Simple unique ID for new local widget
+                name: `New ${widgetType.name}`,
+                hoverMessage: `Hover over this ${widgetType.name}`,
+                isActive: false, // Initially inactive
+                config: widgetType.config ? JSON.parse(JSON.stringify(widgetType.config)) : {}, // Deep copy config
+                customIconDataUrl: null // Initialize custom icon
+            };
+            appState.selectedWidgetToCustomize = newWidget;
+            renderWidgetCustomizationModal();
+        }
+
+        function handleEditWidget(widget) {
+            appState.selectedWidgetToCustomize = JSON.parse(JSON.stringify(widget)); // Deep copy to avoid direct state mutation
+            renderWidgetCustomizationModal();
+        }
+
+        async function handleToggleWidget(widget) {
+            const widgetIndex = appState.userWidgets.findIndex(w => w.id === widget.id);
+            if (widgetIndex !== -1) {
+                console.log(`Before toggle: Widget ID ${widget.id}, isActive: ${appState.userWidgets[widgetIndex].isActive}`);
+                // Toggle the isActive status
+                appState.userWidgets[widgetIndex].isActive = !appState.userWidgets[widgetIndex].isActive;
+                appState.userWidgets[widgetIndex].updatedAt = Date.now();
+                console.log(`After toggle: Widget ID ${widget.id}, isActive: ${appState.userWidgets[widgetIndex].isActive}`);
+                saveStateToLocalStorage();
+                // Use the *new* state for the notification message
+                showNotification(`Widget ${appState.userWidgets[widgetIndex].isActive ? 'activated' : 'deactivated'} successfully!`, 'success');
+                renderApp(); // Re-render to reflect status change
+            } else {
+                showNotification('Widget not found.', 'error');
+            }
+        }
+
+        async function handleDeleteWidget(widgetId) {
+            // Using a custom modal for confirmation instead of window.confirm
+            const confirmDelete = await new Promise(resolve => {
+                const modal = document.createElement('div');
+                modal.className = 'fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 p-4';
+                modal.innerHTML = `
+                    <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 text-center">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Confirm Deletion</h3>
+                        <p class="text-gray-700 mb-6">Are you sure you want to delete this widget?</p>
+                        <div class="flex justify-center space-x-4">
+                            <button id="confirm-cancel" class="px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200">Cancel</button>
+                            <button id="confirm-delete" class="px-5 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 transition-colors duration-200">Delete</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                document.getElementById('confirm-cancel').onclick = () => {
+                    document.body.removeChild(modal);
+                    resolve(false);
+                };
+                document.getElementById('confirm-delete').onclick = () => {
+                    document.body.removeChild(modal);
+                    resolve(true);
+                };
+            });
+
+
+            if (!confirmDelete) return;
+
+            const initialLength = appState.userWidgets.length;
+            appState.userWidgets = appState.userWidgets.filter(w => w.id !== widgetId);
+
+            if (appState.userWidgets.length < initialLength) {
+                saveStateToLocalStorage();
+                showNotification('Widget deleted successfully!', 'success');
+                renderApp(); // Re-render to remove deleted widget
+            } else {
+                showNotification('Widget not found.', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
